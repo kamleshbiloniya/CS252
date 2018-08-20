@@ -1,0 +1,11 @@
+ Make the server persistent, such that it doesn’t quit after one message transfer
+– Redesign the server such that it accepts inputs from the client, transforms them into lowercase
+and transmits back
+– Redesign the server and client such that
+– The client requests an HTML file from the server that is displaying some headers and a simple table
+– The server reads the file stored in the server’s computer and transmits it as text to the client
+– Write a shell script that will display the corresponding webpage on the client’s computer
+– Create a version of the server that will allow connectionless (UDP) transfer
+● Client code will have to change too
+● See if you can get the HTML transfer to work for this UDP connection also
+– Create a version of the TCP server that will permit concurrent connections from multiple clients
