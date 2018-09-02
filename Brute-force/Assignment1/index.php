@@ -5,7 +5,6 @@
 
 <title>BruteForce</title>
 <link rel="stylesheet" type="text/css" href="main.css" />
-<script src="rulebook.js"></script>
 
 </head>
 
