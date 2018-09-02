@@ -1,0 +1,130 @@
+*{
+	margin : 0px;
+	padding : 0px;
+}
+header,footer,aside,section,article,nav{
+	display : block;
+}
+
+body{
+	background-color: #dddddd;
+	width : 100%;
+	display : flex;
+	align-items : center;
+}
+
+#top_bar{
+	display : flex;
+	width : 100%;
+	background-color : #5555cc;
+	height : 120px;
+	position : fixed;
+	flex : 1;
+	align-self : flex-start;
+	align-items: center;
+	justify-content : center;
+}
+
+.boxy{
+	
+	height : 50px; 
+	font: 20px black Tahoma; 
+	flex : 1; 
+	margin-top:0px;"
+}
+
+#imp_div{
+	display : flex;
+	flex-wrap:wrap;
+	min-height : 1000px;
+	min-width:1300px;
+	max-width:1400px;
+	margin-top :120px;
+	
+	flex: 1;
+	border: 1px gray solid;
+	justify-content : center;
+}
+
+#cats{
+	display : flex;
+	justify-content:center;
+	flex-wrap:wrap;
+	flex:1;
+	min-width:1300px;
+	max-width:1400px;
+	margin:20px;
+	background-color: #fefefe;
+}
+#dogs{
+	display : flex;
+	justify-content:center;
+	flex-wrap:wrap;
+	flex:1;
+	min-width:1300px;
+	max-width:1400px;
+	margin:20px;
+	background-color: #fefefe;
+}
+#cars{
+	display : flex;
+	justify-content:center;
+	flex-wrap:wrap;
+	flex:1;
+	min-width:1300px;
+	max-width:1400px;
+	margin:20px;
+	background-color: #fefefe;
+}
+#trucks{
+	display : flex;
+	justify-content:center;
+	flex-wrap:wrap;
+	flex:1;
+	min-width:1300px;
+	max-width:1400px;
+	margin:20px;
+	background-color: #fefefe;
+}
+
+article{
+	
+	background-color:white;
+	
+	width : 300px;
+	height : 300px;
+	transition : box-shadow 0.5s;
+	margin :15px;
+	border : 1px white solid;
+	
+}
+article:hover {
+	border: 1px solid gray;
+	box-shadow : 10px 10px 10px #888888;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
