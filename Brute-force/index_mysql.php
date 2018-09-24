@@ -66,7 +66,17 @@ Department: <select name="dept">
 					<!-- Gender Ratio per department -->
 <form method="post" name="myform" action="" onsubmit="return validationForm()" >
 <fieldset>
-Department:<input type="text" name="dept" maxlength="20" id="myInput1">
+Department:<select name="dept">
+  <option value="d001">Marketing</option>
+  <option value="d002">Finance</option>
+  <option value="d003">Human Resources</option>
+  <option value="d004">Production</option>
+  <option value="d005">Development</option>
+  <option value="d006">Quality Management</option>
+  <option value="d007">Sales</option>
+  <option value="d008">Research</option>
+  <option value="d009">Customer Service</option>
+ </select> 
 
 <br><br>
 <input type="submit" name="submit3" value="show gender ratio">
@@ -80,7 +90,18 @@ Department:<input type="text" name="dept" maxlength="20" id="myInput1">
 
 <form method="post" name="myform" action="" onsubmit="return validationForm()" >
 <fieldset>
-Department:<input type="text" name="dept" maxlength="20" id="myInput1">
+Department:<select name="dept">
+  <option value="d001">Marketing</option>
+  <option value="d002">Finance</option>
+  <option value="d003">Human Resources</option>
+  <option value="d004">Production</option>
+  <option value="d005">Development</option>
+  <option value="d006">Quality Management</option>
+  <option value="d007">Sales</option>
+  <option value="d008">Research</option>
+  <option value="d009">Customer Service</option>
+ </select> 
+
 
 <br><br>
 <input type="submit" name="submit4" value="Show Tenure">
@@ -143,6 +164,11 @@ if(isset($_POST["submit0"])){
 
 	$id = $_POST['id'];
 
+	if(!(preg_match("/[1-9][0-9][0-9][0-9][0-9]/", $id) or preg_match("/[1-9][0-9][0-9][0-9][0-9][0-9]/", $id))){
+		echo "Please enter correct Employee ID";
+		$conn->close();
+	}
+
 	$q = 'select emp_no, first_name as fname, last_name as lname , gender from employees where emp_no = '.$id.';';
 	
 	// echo $q;
@@ -165,6 +191,19 @@ if(isset($_POST["submit1"])){
 	
 	$name = $_POST['name'];
 	$dept = $_POST['dept'];
+
+	if(!preg_match("/[a-z][A-Z]/", $d)){
+		echo "Please Enter right characters";
+		$conn->close();
+	}
+
+
+
+	if(!preg_match("/d00[0-9]/", $dept)){
+		echo "HTML Form tempered";
+		$conn->close();
+	}
+
 
 	$q = $q.' last_name = "'.$name.'"';
 
@@ -221,38 +260,12 @@ if(isset($_POST['submit3'])){
 
 	$d = $_POST['dept'];
 	
-	$d = preg_replace("/^ */", '', $d);
-	$d = preg_replace("/ *$/", '', $d);
-
-	$pattern = "/[dD]00[1-9]/";
-	// echo $d."<br>";
-
-	if(!preg_match($pattern, $d))
-	{	
-	
-		$q = 'select dept_no as d from departments where dept_name = "'.$d.'" ;';
-		// echo $q;
-		$r = $conn->query($q);
-
-		if ($r->num_rows > 0) {
-			// echo "hey";
-		    // output data of each row
-		    while($row = $r->fetch_assoc()) {
-		        $d =  $row["d"];
-		    }
-
-		} 
-
-		else {
-		    echo "Please enter correct department name <br>";
-		}	
-
-	}
 	// echo $d;
-	if(preg_match($pattern, $d))
-		{	
-			echo "match found<br>";
-		}
+
+	if(!preg_match("/d00[1-9]/", $d)){
+		echo "HTML Form tempered";
+		$conn->close();
+	}
 
 	$q = "select count(*) as co, e.gender as g from employees as e join current_dept_emp as c on c.emp_no = e.emp_no where c.dept_no = '".$d."' group by e.gender;";
 
@@ -260,9 +273,6 @@ if(isset($_POST['submit3'])){
 
 	$res = $conn->query($q);
 	
-	//$m = 1;
-	//$f = 1;
-
 	if ($res->num_rows > 0) { 
    // output data of each row
 	    while($row = $res->fetch_assoc()) {
@@ -296,40 +306,11 @@ if(isset($_POST['submit3'])){
 if(isset($_POST['submit4'])){
 
 	$d = $_POST['dept'];
-	$d = preg_replace("/^ */", '', $d);
-	$d = preg_replace("/ *$/", '', $d);
 
-	$pattern = "/[dD]00[1-9]/";
-	// echo $d."<br>";
-
-	if(!preg_match($pattern, $d))
-	{	
-	
-		$q = 'select dept_no as d from departments where dept_name = "'.$d.'" ;';
-		// echo $q;
-		$r = $conn->query($q);
-
-		if ($r->num_rows > 0) {
-			// echo "hey";
-		    // output data of each row
-		    while($row = $r->fetch_assoc()) {
-		        $d =  $row["d"];
-		    }
-
-		} 
-
-		else {
-		    echo "Please enter correct department name <br>";
-		}	
-
+	if(!preg_match("/d00[1-9]/", $d)){
+		echo "HTML Form tempered";
+		$conn->close();
 	}
-	// echo $d;
-	if(preg_match($pattern, $d))
-		{	
-			echo "match found<br>";
-		}
-
-	// echo $d;
 
 	$q = 'select d.emp_no as emp, e.hire_date as f, d.to_date as t,DATEDIFF(d.to_date,e.hire_date) as days from employees as e , current_dept_emp as d where e.emp_no = d.emp_no and d.dept_no = "'.$d.'" order by DATEDIFF(d.to_date,e.hire_date) DESC;';
 
@@ -373,11 +354,10 @@ if(isset($_POST['submit5'])){
 
 	if(!preg_match("/d00[1-9]/", $d)){
 		echo "HTML Form tempered";
+		$conn->close();
 	}
 	
 	$q = 'select m.title, m.cout as mavg , f.cout as favg from (select e.gender as gender, t.title as title , avg(s.salary) as cout from current_dept_emp as c , employees as e, salaries as s, titles as t where c.dept_no = "'.$d.'" and e.gender = "M" and c.emp_no = e.emp_no and e.emp_no = s.emp_no and s.emp_no = t.emp_no group by t.title ) as m left join (select e.gender as gender, t.title as title , avg(s.salary) as cout from current_dept_emp as c , employees as e, salaries as s, titles as t where c.dept_no = "'.$d.'" and e.gender = "F" and c.emp_no = e.emp_no and e.emp_no = s.emp_no and s.emp_no = t.emp_no group by t.title ) as f on m.title = f.title union select m.title, m.cout as mavg, f.cout as favg from (select e.gender as gender, t.title as title , avg(s.salary) as cout from current_dept_emp as c , employees as e, salaries as s, titles as t where c.dept_no = "'.$d.'" and e.gender = "M" and c.emp_no = e.emp_no and e.emp_no = s.emp_no and s.emp_no = t.emp_no group by t.title ) as m right join (select e.gender as gender, t.title as title , avg(s.salary) as cout from current_dept_emp as c , employees as e, salaries as s, titles as t where c.dept_no = "'.$d.'" and e.gender = "F" and c.emp_no = e.emp_no and e.emp_no = s.emp_no and s.emp_no = t.emp_no group by t.title ) as f on m.title = f.title ;';
-
-	// echo $q;
 
 	$res = $conn->query($q);
 	
