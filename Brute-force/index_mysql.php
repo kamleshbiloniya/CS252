@@ -164,11 +164,11 @@ if(isset($_POST["submit0"])){
 
 	$id = $_POST['id'];
 
-	if(!(preg_match("/[1-9][0-9][0-9][0-9][0-9]/", $id) or preg_match("/[1-9][0-9][0-9][0-9][0-9][0-9]/", $id))){
-		echo "Please enter correct Employee ID";
-		$conn->close();
+	if(!($id > 10000 and $id < 999999)){
+		echo "Employee ID did not match";
+		
 	}
-
+	else{
 	$q = 'select emp_no, first_name as fname, last_name as lname , gender from employees where emp_no = '.$id.';';
 	
 	// echo $q;
@@ -183,6 +183,7 @@ if(isset($_POST["submit0"])){
 	    echo "Wrong Employee ID\n";
 	}
 	// $conn->close();
+	}
 }
 
 if(isset($_POST["submit1"])){
@@ -192,19 +193,21 @@ if(isset($_POST["submit1"])){
 	$name = $_POST['name'];
 	$dept = $_POST['dept'];
 
-	if(!preg_match("/[a-z][A-Z]/", $d)){
-		echo "Please Enter right characters";
-		$conn->close();
+	if(!preg_match("/^[[:alpha:]]+$/", $name)){
+		echo "Please Enter English alphabets only. No Whitespaces...!!!" ;
+		// $conn->close();
 	}
 
 
 
-	if(!preg_match("/d00[0-9]/", $dept)){
+	else if(!preg_match("/^d00[0-9]$/", $dept)){
 		echo "HTML Form tempered";
-		$conn->close();
+		// $conn->close();
 	}
 
+	else{
 
+	// echo "abc".$name;
 	$q = $q.' last_name = "'.$name.'"';
 
 	if($dept == "d000"){
@@ -226,6 +229,7 @@ if(isset($_POST["submit1"])){
 	}
 	 else {
 	    echo "0 results";
+	}
 	}
 	// $conn->close();
 }
@@ -262,11 +266,11 @@ if(isset($_POST['submit3'])){
 	
 	// echo $d;
 
-	if(!preg_match("/d00[1-9]/", $d)){
+	if(!preg_match("/^d00[1-9]$/", $d)){
 		echo "HTML Form tempered";
-		$conn->close();
+		// $conn->close();
 	}
-
+	else{
 	$q = "select count(*) as co, e.gender as g from employees as e join current_dept_emp as c on c.emp_no = e.emp_no where c.dept_no = '".$d."' group by e.gender;";
 
 	//echo $q;
@@ -300,6 +304,7 @@ if(isset($_POST['submit3'])){
 	echo "Gender Ratio = ";
 	echo ($f/$m)*1000;
 	echo "<br>";
+	}
 
 }
 
@@ -307,26 +312,27 @@ if(isset($_POST['submit4'])){
 
 	$d = $_POST['dept'];
 
-	if(!preg_match("/d00[1-9]/", $d)){
+	if(!preg_match("/^d00[1-9]$/", $d)){
 		echo "HTML Form tempered";
-		$conn->close();
+		// $conn->close();
 	}
-
-	$q = 'select d.emp_no as emp, e.hire_date as f, d.to_date as t,DATEDIFF(d.to_date,e.hire_date) as days from employees as e , current_dept_emp as d where e.emp_no = d.emp_no and d.dept_no = "'.$d.'" order by DATEDIFF(d.to_date,e.hire_date) DESC;';
+	else{
+	$q = 'select e.first_name as fname, e.last_name as lname, e.hire_date as f, d.to_date as t,DATEDIFF(d.to_date,e.hire_date) as days from employees as e , current_dept_emp as d where e.emp_no = d.emp_no and d.dept_no = "'.$d.'" order by DATEDIFF(d.to_date,e.hire_date) DESC;';
 
 	// echo $q;
 
 	$res = $conn->query($q);
 	
 	if ($res->num_rows > 0) {
-    // output data of each row
+    
 	    while($row = $res->fetch_assoc()) {
-	    	$emp = $row["emp"];
+	    	$fname = $row['fname'];
+	    	$lname = $row['lname'];
 	        $from =  $row["f"];
 	        $to = $row["t"];
 	        
 	        
-	        echo $emp." ";
+	        echo $fname." ".$lname." ";
 	        echo "from ".$from;
 
 	        if ( preg_match("/9999-01-01/", $to)){
@@ -341,7 +347,7 @@ if(isset($_POST['submit4'])){
 	else {
 	    echo "0 results";
 	}	
-
+	}
 
 }
 
@@ -352,11 +358,11 @@ if(isset($_POST['submit5'])){
 	
 	// echo $d;
 
-	if(!preg_match("/d00[1-9]/", $d)){
+	if(!preg_match("/^d00[1-9]$/", $d)){
 		echo "HTML Form tempered";
-		$conn->close();
+		// $conn->close();
 	}
-	
+	else{
 	$q = 'select m.title, m.cout as mavg , f.cout as favg from (select e.gender as gender, t.title as title , avg(s.salary) as cout from current_dept_emp as c , employees as e, salaries as s, titles as t where c.dept_no = "'.$d.'" and e.gender = "M" and c.emp_no = e.emp_no and e.emp_no = s.emp_no and s.emp_no = t.emp_no group by t.title ) as m left join (select e.gender as gender, t.title as title , avg(s.salary) as cout from current_dept_emp as c , employees as e, salaries as s, titles as t where c.dept_no = "'.$d.'" and e.gender = "F" and c.emp_no = e.emp_no and e.emp_no = s.emp_no and s.emp_no = t.emp_no group by t.title ) as f on m.title = f.title union select m.title, m.cout as mavg, f.cout as favg from (select e.gender as gender, t.title as title , avg(s.salary) as cout from current_dept_emp as c , employees as e, salaries as s, titles as t where c.dept_no = "'.$d.'" and e.gender = "M" and c.emp_no = e.emp_no and e.emp_no = s.emp_no and s.emp_no = t.emp_no group by t.title ) as m right join (select e.gender as gender, t.title as title , avg(s.salary) as cout from current_dept_emp as c , employees as e, salaries as s, titles as t where c.dept_no = "'.$d.'" and e.gender = "F" and c.emp_no = e.emp_no and e.emp_no = s.emp_no and s.emp_no = t.emp_no group by t.title ) as f on m.title = f.title ;';
 
 	$res = $conn->query($q);
@@ -384,7 +390,7 @@ if(isset($_POST['submit5'])){
 	else {
 	    echo "0 results";
 	}	
-
+	}
 }
 
 
