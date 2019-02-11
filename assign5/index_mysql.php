@@ -58,8 +58,8 @@ Department:<input type="text" name="dept" maxlength="20" id="myInput1">
 <?php
 
 $servername = "localhost";
-$username = "cs252";
-$password = "cs252";
+$username = "########";
+$password = "########";
 $database = "employees";
 // Create connection
 $conn = new mysqli($servername, $username, $password , $database);
